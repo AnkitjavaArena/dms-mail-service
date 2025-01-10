@@ -1,7 +1,7 @@
 CREATE TABLE "EmailTrack" (
     "Id" VARCHAR(255) PRIMARY KEY,         
-    "From" VARCHAR(255) NOT NULL,         
-    "To" VARCHAR(255) NOT NULL,           
+    "Sender" VARCHAR(255) NOT NULL,         
+    "Receipient" VARCHAR(255) NOT NULL,           
     "Time" TIMESTAMP NOT NULL,            
     "Status" VARCHAR(255) NOT NULL,       
     "Count" INT,                          
