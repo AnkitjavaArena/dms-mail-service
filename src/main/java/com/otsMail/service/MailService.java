@@ -32,7 +32,7 @@ public class MailService {
 	private JavaMailSender getMailSender() {
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 		mailSender.setHost(mailConfig.getHost());
-		mailSender.setPort(mailConfig.getPort());
+		mailSender.setPort(Integer.parseInt(mailConfig.getPort()));
 		mailSender.setUsername(mailConfig.getUsername());
 		mailSender.setPassword(mailConfig.getPassword());
 
