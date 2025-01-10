@@ -1,6 +1,9 @@
 CREATE TABLE "EmailTrack" (
-    "Id" BIGINT AUTO_INCREMENT PRIMARY KEY,
-    "Email" VARCHAR(255) NOT NULL,
-    "Status" VARCHAR(50) NOT NULL,
-    "Sent_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    "Id" VARCHAR(255) PRIMARY KEY,         
+    "From" VARCHAR(255) NOT NULL,         
+    "To" VARCHAR(255) NOT NULL,           
+    "Time" TIMESTAMP NOT NULL,            
+    "Status" VARCHAR(255) NOT NULL,       
+    "Count" INT,                          
+    "Subscribe" BOOLEAN DEFAULT TRUE     -- Subscription status (True/False), defaults to true, if set to false, user unsubscribed, dont mail them
 );
