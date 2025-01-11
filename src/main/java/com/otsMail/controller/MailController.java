@@ -13,6 +13,7 @@ import com.otsMail.model.Receipient;
 import com.otsMail.model.RecipientDetail;
 import com.otsMail.service.MailService;
 import com.otsMail.util.AppConstants;
+import com.otsMail.util.EmailHelper;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +25,11 @@ public class MailController {
 	@Autowired
 	private MailService mailService;
 	private final @NonNull EmailTrackRepository emailTrackRepository;
+	private final @NonNull EmailHelper emailHelper;
 
 	@PostMapping(AppConstants.API + "/sendMail")
-	public String sendOtpEmail(@RequestBody RecipientDetail recipientDetail) {
+	public String sendEmail(@RequestBody RecipientDetail recipientDetail) {
+		emailHelper.insertRecord(recipientDetail);
 		for (Receipient recipient : recipientDetail.getRecipients()) {
 			mailService.sendEmailToRecipient(recipient);
 		}
