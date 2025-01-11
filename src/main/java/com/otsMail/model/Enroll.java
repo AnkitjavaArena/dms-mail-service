@@ -24,8 +24,6 @@ public class Enroll {
 	@Column(name = "Id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(name = "Sender")
-	private String from;
 	@Column(name = "Receipient")
 	private String to;
 	@Column(name = "Salutation")

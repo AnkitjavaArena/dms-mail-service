@@ -33,7 +33,6 @@ public class EmailHelper {
         //TODO need to verify whether a email is already present or not, if present no insertion just update some fields
         List<Enroll> enroll = recipients.stream()
                 .map(recipient -> Enroll.builder()
-                        .from(emailConfig.getFrom()) 
                         .salutation(this.getSalutationValue(recipient))
                         .to(recipient.getEmail()) 
                         .time(LocalDateTime.now())
