@@ -68,6 +68,7 @@ public class MailService {
 			}
 			mailSender.send(message);
 			log.info("mail sent: {}", recipient.getEmail());
+			emailHelper.updateCounterForRecipient(recipient);
 		} catch (MessagingException | IOException e) {
 			e.printStackTrace();
 			log.info("Fail to send mail to :{}", recipient.getEmail());
