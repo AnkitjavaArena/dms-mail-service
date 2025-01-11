@@ -24,7 +24,7 @@ public class Enroll {
 	@Column(name = "Id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(name = "Receipient")
+	@Column(name = "Recipient")
 	private String to;
 	@Column(name = "Salutation")
 	private String salutation;

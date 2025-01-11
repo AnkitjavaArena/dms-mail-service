@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.otsMail.dao.EmailTrackRepository;
+import com.otsMail.dao.EnrollRepository;
 import com.otsMail.model.Enroll;
-import com.otsMail.model.Receipient;
+import com.otsMail.model.Recipient;
 import com.otsMail.model.RecipientDetail;
 import com.otsMail.service.MailService;
 import com.otsMail.util.AppConstants;
@@ -24,13 +24,14 @@ public class MailController {
 
 	@Autowired
 	private MailService mailService;
-	private final @NonNull EmailTrackRepository emailTrackRepository;
+	private final @NonNull EnrollRepository enrollRepository;
 	private final @NonNull EmailHelper emailHelper;
 
 	@PostMapping(AppConstants.API + "/sendMail")
 	public String sendEmail(@RequestBody RecipientDetail recipientDetail) {
-		emailHelper.insertRecord(recipientDetail);
-		for (Receipient recipient : recipientDetail.getRecipients()) {
+		emailHelper.registerRecipients(recipientDetail);
+
+		for (Recipient recipient : emailHelper.filterUniqueReceipient(recipientDetail.getRecipients())) {
 			mailService.sendEmailToRecipient(recipient);
 		}
 		return "email sending initiated!";
@@ -38,7 +39,7 @@ public class MailController {
 
 	@PostMapping(AppConstants.API + "/insert")
 	public ResponseEntity<Enroll> createEmailTrackRecord(@RequestBody Enroll enroll) {
-		Enroll savedEmailTrack = emailTrackRepository.save(enroll);
+		Enroll savedEmailTrack = enrollRepository.save(enroll);
 		return new ResponseEntity<>(savedEmailTrack, HttpStatus.CREATED);
 	}
 }

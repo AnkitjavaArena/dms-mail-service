@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.otsMail.config.EmailConfig;
-import com.otsMail.model.Receipient;
+import com.otsMail.model.Recipient;
 import com.otsMail.util.EmailHelper;
 
 import jakarta.mail.MessagingException;
@@ -45,11 +45,11 @@ public class MailService {
 	}
 
 	@Async
-	public void sendEmailToRecipient(Receipient recipient) {
+	public void sendEmailToRecipient(Recipient recipient) {
 		this.sendEmail(recipient);
 	}
 
-	public void sendEmail(Receipient recipient) {
+	public void sendEmail(Recipient recipient) {
 		try {
 			JavaMailSender mailSender = getMailSender();
 			MimeMessage message = mailSender.createMimeMessage();
