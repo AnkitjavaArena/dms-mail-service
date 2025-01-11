@@ -35,19 +35,17 @@ public class EmailHelper {
                 .map(recipient -> Enroll.builder()
                         .salutation(this.getSalutationValue(recipient))
                         .to(recipient.getEmail()) 
+                        .status(AppConstants.DEFAULT_STATUS)
                         .time(LocalDateTime.now())
-                        .status("PENDING")
                         .count(AppConstants.DEFAULT_COUNT)
                         .subscribe(Boolean.TRUE) 
                         .build())
                 .toList();
-
-        // Save all records to the database
        emailTrackRepository.saveAll(enroll);	
 	}
 	
 	public String getSalutationValue(Receipient recipient) {
-		String salutation="Team";
+		String salutation=AppConstants.DEFAULT_SALUTATION;
 		if (recipient.getSalutation() != null && !(recipient.getSalutation().isBlank())) {
 			salutation = recipient.getSalutation();
 		}
