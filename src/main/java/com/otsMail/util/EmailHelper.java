@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -96,7 +97,7 @@ public class EmailHelper {
 	/**
 	 * 
 	 * @param recipients
-	 * @return List of Recipients
+	 * @return
 	 * filters and removes duplicate recipient based on mailId's
 	 */
 	public List<Recipient> filterUniqueReceipient(List<Recipient> recipients) {
@@ -109,5 +110,23 @@ public class EmailHelper {
 		}
 		return uniqueRecipients;
 	}
+	
+	public void updateCounterForRecipient(Recipient recipient) {
+		try {
+			Enroll enroll = getEnrollByEmail(recipient.getEmail());
+			if (enroll != null) {
+				Integer count = enroll.getCount() != null ? enroll.getCount() : 0;
+				enroll.setCount(count + 1);
+				enrollRepository.save(enroll);
+				log.info("Updated count for recipient: {}", recipient.getEmail());
+			}
+		} catch (NoSuchElementException e) {
+			log.info("Error: {}", e.getMessage());
+		}
+	}
 
+	public Enroll getEnrollByEmail(String email) {
+		return enrollRepository.findByTo(email)
+				.orElseThrow(() -> new NoSuchElementException("No enrollment found for email: " + email));
+	}
 }

@@ -1,14 +1,11 @@
 package com.otsMail.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.otsMail.dao.EnrollRepository;
-import com.otsMail.model.Enroll;
 import com.otsMail.model.Recipient;
 import com.otsMail.model.RecipientDetail;
 import com.otsMail.service.MailService;
@@ -37,9 +34,4 @@ public class MailController {
 		return "email sending initiated!";
 	}
 
-	@PostMapping(AppConstants.API + "/insert")
-	public ResponseEntity<Enroll> createEmailTrackRecord(@RequestBody Enroll enroll) {
-		Enroll savedEmailTrack = enrollRepository.save(enroll);
-		return new ResponseEntity<>(savedEmailTrack, HttpStatus.CREATED);
-	}
 }
