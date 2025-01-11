@@ -1,8 +1,6 @@
 package com.otsMail.service;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Properties;
 
 import org.springframework.core.io.ClassPathResource;
@@ -14,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.otsMail.config.EmailConfig;
 import com.otsMail.model.Receipient;
+import com.otsMail.util.EmailHelper;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -27,7 +26,7 @@ import lombok.extern.log4j.Log4j2;
 public class MailService {
 
 	private final @NonNull EmailConfig mailConfig;
-	private static String salutation = "Team";
+	private final @NonNull EmailHelper emailHelper;
 
 	private JavaMailSender getMailSender() {
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
@@ -50,12 +49,6 @@ public class MailService {
 		this.sendEmail(recipient);
 	}
 
-	public String getEmailContent(String salutation) throws IOException {
-		String template = new String(
-				Files.readAllBytes(Paths.get(new ClassPathResource("email-template.html").getURI())));
-		return template.replace("{{salutation}}", salutation);
-	}
-
 	public void sendEmail(Receipient recipient) {
 		try {
 			JavaMailSender mailSender = getMailSender();
@@ -65,10 +58,7 @@ public class MailService {
 			helper.setTo(recipient.getEmail());
 			helper.setSubject(mailConfig.getSubject());
 
-			if (recipient.getSalutation() != null && !(recipient.getSalutation().isBlank())) {
-				salutation = recipient.getSalutation();
-			}
-			String emailContent = getEmailContent(salutation);
+			String emailContent = emailHelper.getEmailContent(emailHelper.getSalutationValue(recipient));
 			helper.setText(emailContent, true);
 			ClassPathResource attachmenLocation = new ClassPathResource("Ankit_Resume_Java.pdf");
 			if (attachmenLocation.exists()) {

@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -12,19 +14,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "EmailTrack")
+@Table(name = "Enroll")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmailTrack {
+public class Enroll {
 	@Id
 	@Column(name = "Id")
-	private String id;
-	@Column(name = "Sender")
-	private String from;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 	@Column(name = "Receipient")
 	private String to;
+	@Column(name = "Salutation")
+	private String salutation;
 	@Column(name = "Time")
 	private LocalDateTime time;
 	@Column(name = "Status")
