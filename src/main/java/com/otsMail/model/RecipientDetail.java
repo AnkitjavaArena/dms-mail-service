@@ -6,5 +6,5 @@ import lombok.Data;
 
 @Data
 public class RecipientDetail {
-	private List<Receipient> recipients;
+	private List<Recipient> recipients;
 }

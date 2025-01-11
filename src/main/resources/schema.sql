@@ -1,6 +1,6 @@
 CREATE TABLE "Enroll" (
     "Id" BIGINT PRIMARY KEY AUTO_INCREMENT,
-    "Receipient" VARCHAR(255) NOT NULL,
+    "Recipient" VARCHAR(255) NOT NULL,
     "Salutation" VARCHAR(255),
     "Time" TIMESTAMP NOT NULL,
     "Status" VARCHAR(255) NOT NULL,
