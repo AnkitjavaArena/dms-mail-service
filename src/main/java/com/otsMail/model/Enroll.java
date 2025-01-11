@@ -14,12 +14,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "EmailTrack")
+@Table(name = "Enroll")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmailTrack {
+public class Enroll {
 	@Id
 	@Column(name = "Id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

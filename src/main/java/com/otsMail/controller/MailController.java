@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.otsMail.dao.EmailTrackRepository;
-import com.otsMail.model.EmailTrack;
+import com.otsMail.model.Enroll;
 import com.otsMail.model.Receipient;
 import com.otsMail.model.RecipientDetail;
 import com.otsMail.service.MailService;
@@ -37,8 +37,8 @@ public class MailController {
 	}
 
 	@PostMapping(AppConstants.API + "/insert")
-	public ResponseEntity<EmailTrack> createEmailTrackRecord(@RequestBody EmailTrack emailTrack) {
-		EmailTrack savedEmailTrack = emailTrackRepository.save(emailTrack);
+	public ResponseEntity<Enroll> createEmailTrackRecord(@RequestBody Enroll enroll) {
+		Enroll savedEmailTrack = emailTrackRepository.save(enroll);
 		return new ResponseEntity<>(savedEmailTrack, HttpStatus.CREATED);
 	}
 }

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.otsMail.config.EmailConfig;
 import com.otsMail.dao.EmailTrackRepository;
-import com.otsMail.model.EmailTrack;
+import com.otsMail.model.Enroll;
 import com.otsMail.model.Receipient;
 import com.otsMail.model.RecipientDetail;
 
@@ -31,8 +31,8 @@ public class EmailHelper {
 	public void insertRecord(RecipientDetail recipientDetail) {
         List<Receipient> recipients = recipientDetail.getRecipients();
         //TODO need to verify whether a email is already present or not, if present no insertion just update some fields
-        List<EmailTrack> emailTracks = recipients.stream()
-                .map(recipient -> EmailTrack.builder()
+        List<Enroll> enroll = recipients.stream()
+                .map(recipient -> Enroll.builder()
                         .from(emailConfig.getFrom()) 
                         .salutation(this.getSalutationValue(recipient))
                         .to(recipient.getEmail()) 
@@ -44,7 +44,7 @@ public class EmailHelper {
                 .toList();
 
         // Save all records to the database
-       emailTrackRepository.saveAll(emailTracks);	
+       emailTrackRepository.saveAll(enroll);	
 	}
 	
 	public String getSalutationValue(Receipient recipient) {
