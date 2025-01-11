@@ -1,8 +1,12 @@
 package com.otsMail.util;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 import com.otsMail.config.EmailConfig;
@@ -27,10 +31,10 @@ public class EmailHelper {
 	public void insertRecord(RecipientDetail recipientDetail) {
         List<Receipient> recipients = recipientDetail.getRecipients();
         //TODO need to verify whether a email is already present or not, if present no insertion just update some fields
-        //TODO salutation is missing in entity and table
         List<EmailTrack> emailTracks = recipients.stream()
                 .map(recipient -> EmailTrack.builder()
                         .from(emailConfig.getFrom()) 
+                        .salutation(this.getSalutationValue(recipient))
                         .to(recipient.getEmail()) 
                         .time(LocalDateTime.now())
                         .status("PENDING")
@@ -40,9 +44,21 @@ public class EmailHelper {
                 .toList();
 
         // Save all records to the database
-       emailTrackRepository.saveAll(emailTracks);
-
-		
+       emailTrackRepository.saveAll(emailTracks);	
 	}
-
+	
+	public String getSalutationValue(Receipient recipient) {
+		String salutation="Team";
+		if (recipient.getSalutation() != null && !(recipient.getSalutation().isBlank())) {
+			salutation = recipient.getSalutation();
+		}
+		return salutation;
+	}
+	
+	public String getEmailContent(String salutation) throws IOException {
+		String template = new String(
+				Files.readAllBytes(Paths.get(new ClassPathResource("email-template.html").getURI())));
+		return template.replace("{{salutation}}", salutation);
+	}
+	
 }

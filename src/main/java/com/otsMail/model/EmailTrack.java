@@ -28,6 +28,8 @@ public class EmailTrack {
 	private String from;
 	@Column(name = "Receipient")
 	private String to;
+	@Column(name = "Salutation")
+	private String salutation;
 	@Column(name = "Time")
 	private LocalDateTime time;
 	@Column(name = "Status")
