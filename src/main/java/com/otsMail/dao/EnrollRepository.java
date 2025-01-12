@@ -12,4 +12,6 @@ import com.otsMail.model.Enroll;
 public interface EnrollRepository extends JpaRepository<Enroll, Long> {
 	List<Enroll> findByToIn(List<String> to);
 	Optional<Enroll> findByTo(String to);
+	List<Enroll> findByStatusIgnoreCaseAndSubscribeTrue(String status);
+	
 }

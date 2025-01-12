@@ -127,4 +127,8 @@ public class EmailHelper {
 		return enrollRepository.findByTo(email)
 				.orElseThrow(() -> new NoSuchElementException("No enrollment found for email: " + email));
 	}
+	
+	public List<Enroll> getActiveEnrollments() {
+        return enrollRepository.findByStatusIgnoreCaseAndSubscribeTrue("active");
+    }
 }
