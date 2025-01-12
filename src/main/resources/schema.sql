@@ -14,7 +14,6 @@ CREATE TABLE "EmailHistory" (
     "Sender" VARCHAR(255) NOT NULL,
     "Recipient" VARCHAR(255) NOT NULL,
     "Timestamp" TIMESTAMP NOT NULL,
-    "Salutation" VARCHAR(255),
     "Status" VARCHAR(255) NOT NULL,
     "Subscribe" BOOLEAN DEFAULT TRUE,
     FOREIGN KEY ("EnrollId") REFERENCES "Enroll"("Id")

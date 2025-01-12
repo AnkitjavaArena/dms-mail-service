@@ -1,6 +1,7 @@
 package com.otsMail.service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Properties;
 
 import org.springframework.core.io.ClassPathResource;
@@ -27,6 +28,7 @@ public class MailService {
 
 	private final @NonNull EmailConfig mailConfig;
 	private final @NonNull EmailHelper emailHelper;
+	private final @NonNull EmailHistoryService emailHistoryService;
 
 	private JavaMailSender getMailSender() {
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
@@ -66,9 +68,11 @@ public class MailService {
 			} else {
 				throw new IOException("Referred file not found in classpath.");
 			}
+			LocalDateTime timestamp = LocalDateTime.now();
 			mailSender.send(message);
-			log.info("mail sent: {}", recipient.getEmail());
 			emailHelper.updateCounterForRecipient(recipient);
+			emailHistoryService.createEmailHistory(recipient, timestamp);
+			log.info("mail sent: {}", recipient.getEmail());
 		} catch (MessagingException | IOException e) {
 			e.printStackTrace();
 			log.info("Fail to send mail to :{}", recipient.getEmail());
