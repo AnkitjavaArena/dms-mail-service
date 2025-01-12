@@ -2,13 +2,6 @@ package com.otsMail.component;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,64 +23,24 @@ public class DatabaseBackup {
 	@Autowired
 	private EnrollRepository enrollRepository;
 
-	// TODO change to jpa rather than plain jdbc
+	// TODO we need to take backup of other files-create a dir and store those
+	// files, currently only Enroll data
 	@PreDestroy
-	public void backupDatabase() {
-		this.exportEnrollDataToFile();
-	}
-
-	public void exportEnrollDataToFile() {
-		Connection connection = null;
-		Statement statement = null;
-		ResultSet resultSet = null;
-
+	public void exportDataFromDbtoFile() {
 		try {
-			connection = DriverManager.getConnection("jdbc:h2:mem:test", "test", "test");
-			String sqlQuery = "SELECT * FROM \"Enroll\"";
-			statement = connection.createStatement();
-			resultSet = statement.executeQuery(sqlQuery);
-			List<Enroll> enrollList = new ArrayList<>();
-			while (resultSet.next()) {
-				Enroll enroll = new Enroll();
-				enroll.setId(resultSet.getLong("Id"));
-				enroll.setTo(resultSet.getString("Recipient"));
-				enroll.setSalutation(resultSet.getString("Salutation"));
-				enroll.setTime(resultSet.getObject("Time", LocalDateTime.class));
-				enroll.setStatus(resultSet.getString("Status"));
-				enroll.setCount(resultSet.getInt("Count"));
-				enroll.setSubscribe(resultSet.getBoolean("Subscribe"));
-
-				enrollList.add(enroll);
-			}
+			List<Enroll> enrollList = enrollRepository.findAll();
 			ObjectMapper objectMapper = new ObjectMapper();
 			objectMapper.registerModule(new JavaTimeModule());
 			objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 			objectMapper.writeValue(new File("enroll_backup.json"), enrollList);
 			log.info("Enroll data exported successfully to enroll_backup.json");
-
-		} catch (SQLException e) {
-			System.err.println("Database error: " + e.getMessage());
-			e.printStackTrace();
 		} catch (IOException e) {
-			System.err.println("Error exporting data: " + e.getMessage());
-			e.printStackTrace();
-		} finally {
-			try {
-				if (resultSet != null)
-					resultSet.close();
-				if (statement != null)
-					statement.close();
-				if (connection != null)
-					connection.close();
-			} catch (SQLException e) {
-				System.err.println("Error closing database resources: " + e.getMessage());
-				e.printStackTrace();
-			}
+			log.error("Error exporting data: {}", e.getMessage(), e);
 		}
 	}
 
 	@PostConstruct
-	public void loadDataFromBackupFile() {
+	public void importDataToDb() {
 		try {
 			// TODO create a single bean of objectmapper and reuse everywhere
 			ObjectMapper objectMapper = new ObjectMapper();
@@ -97,10 +50,10 @@ public class DatabaseBackup {
 			for (Enroll enroll : enrollList) {
 				enrollRepository.save(enroll);
 			}
-			System.out.println("Enroll data successfully loaded into the database.");
+			log.info("Enroll data successfully loaded into the database.");
 
 		} catch (IOException e) {
-			System.err.println("Error loading enroll data from backup file: " + e.getMessage());
+			log.error("Error loading enroll data from backup file: {}", e.getMessage());
 		}
 	}
 
