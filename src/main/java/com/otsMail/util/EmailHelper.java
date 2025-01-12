@@ -15,9 +15,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.otsMail.config.EmailConfig;
+import com.otsMail.dao.EmailHistoryRepository;
 import com.otsMail.dao.EnrollRepository;
 import com.otsMail.model.Enroll;
 import com.otsMail.model.Recipient;
@@ -35,6 +34,7 @@ import lombok.extern.log4j.Log4j2;
 public class EmailHelper {
 	private final @NonNull EmailConfig emailConfig;
 	private final @NonNull EnrollRepository enrollRepository;
+	private final @NonNull EmailHistoryRepository emailHistoryRepository;
 	private final @NonNull ObjectMapper objectMapper;
 
 	public void registerRecipients(RecipientDetail recipientDetail) {
