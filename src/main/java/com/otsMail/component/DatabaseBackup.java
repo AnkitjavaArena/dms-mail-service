@@ -8,8 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.otsMail.dao.EmailHistoryRepository;
 import com.otsMail.dao.EnrollRepository;
+import com.otsMail.model.EmailHistory;
 import com.otsMail.model.Enroll;
 
 import jakarta.annotation.PostConstruct;
@@ -23,15 +24,18 @@ public class DatabaseBackup {
 	private EnrollRepository enrollRepository;
 	@Autowired
 	private ObjectMapper objectMapper;
+	@Autowired
+	private EmailHistoryRepository emailHistoryRepository;
 
-	// TODO we need to take backup of other files-create a dir and store those
-	// files, currently only Enroll data
 	@PreDestroy
 	public void exportDataFromDbtoFile() {
 		try {
 			List<Enroll> enrollList = enrollRepository.findAll();
 			objectMapper.writeValue(new File("enroll_backup.json"), enrollList);
 			log.info("Enroll data exported successfully to enroll_backup.json");
+			List<EmailHistory> emailHistoryList = emailHistoryRepository.findAll();
+			objectMapper.writeValue(new File("emailHistory_backup.json"), emailHistoryList);
+			log.info("Email History exported successfully to emailHistory_backup.json");
 		} catch (IOException e) {
 			log.error("Error exporting data: {}", e.getMessage(), e);
 		}
@@ -46,6 +50,13 @@ public class DatabaseBackup {
 				enrollRepository.save(enroll);
 			}
 			log.info("Enroll data successfully loaded into the database.");
+
+			List<EmailHistory> emailHistoryList = objectMapper.readValue(new File("emailHistory_backup.json"),
+					objectMapper.getTypeFactory().constructCollectionType(List.class, EmailHistory.class));
+			for (EmailHistory emailHistory : emailHistoryList) {
+				emailHistoryRepository.save(emailHistory);
+			}
+			log.info("Email History successfully loaded into the database.");
 
 		} catch (IOException e) {
 			log.error("Error loading enroll data from backup file: {}", e.getMessage());
