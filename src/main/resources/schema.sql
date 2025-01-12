@@ -7,3 +7,15 @@ CREATE TABLE "Enroll" (
     "Count" INT,
     "Subscribe" BOOLEAN DEFAULT TRUE
 );
+
+CREATE TABLE "EmailHistory" (
+    "Id" BIGINT PRIMARY KEY AUTO_INCREMENT,
+    "EnrollId" BIGINT,
+    "Sender" VARCHAR(255) NOT NULL,
+    "Recipient" VARCHAR(255) NOT NULL,
+    "Timestamp" TIMESTAMP NOT NULL,
+    "Salutation" VARCHAR(255),
+    "Status" VARCHAR(255) NOT NULL,
+    "Subscribe" BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY ("EnrollId") REFERENCES "Enroll"("Id")
+);
