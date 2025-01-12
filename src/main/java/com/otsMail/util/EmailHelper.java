@@ -35,6 +35,7 @@ import lombok.extern.log4j.Log4j2;
 public class EmailHelper {
 	private final @NonNull EmailConfig emailConfig;
 	private final @NonNull EnrollRepository enrollRepository;
+	private final @NonNull ObjectMapper objectMapper;
 
 	public void registerRecipients(RecipientDetail recipientDetail) {
 		List<Recipient> recipients = recipientDetail.getRecipients();
@@ -61,9 +62,6 @@ public class EmailHelper {
 		 
 		 if (!newEnrollments.isEmpty()) {
 	            enrollRepository.saveAll(newEnrollments);
-	            ObjectMapper objectMapper = new ObjectMapper();
-	            objectMapper.registerModule(new JavaTimeModule());
-	            objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 	            List<String> emailAddresses = newEnrollments.stream()
 	                    .map(Enroll::getTo)
 	                    .collect(Collectors.toList());

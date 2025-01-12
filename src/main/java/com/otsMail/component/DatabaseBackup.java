@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.otsMail.dao.EnrollRepository;
 import com.otsMail.model.Enroll;
@@ -22,6 +21,8 @@ import lombok.extern.log4j.Log4j2;
 public class DatabaseBackup {
 	@Autowired
 	private EnrollRepository enrollRepository;
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	// TODO we need to take backup of other files-create a dir and store those
 	// files, currently only Enroll data
@@ -29,9 +30,6 @@ public class DatabaseBackup {
 	public void exportDataFromDbtoFile() {
 		try {
 			List<Enroll> enrollList = enrollRepository.findAll();
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.registerModule(new JavaTimeModule());
-			objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 			objectMapper.writeValue(new File("enroll_backup.json"), enrollList);
 			log.info("Enroll data exported successfully to enroll_backup.json");
 		} catch (IOException e) {
@@ -42,9 +40,6 @@ public class DatabaseBackup {
 	@PostConstruct
 	public void importDataToDb() {
 		try {
-			// TODO create a single bean of objectmapper and reuse everywhere
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.registerModule(new JavaTimeModule());
 			List<Enroll> enrollList = objectMapper.readValue(new File("enroll_backup.json"),
 					objectMapper.getTypeFactory().constructCollectionType(List.class, Enroll.class));
 			for (Enroll enroll : enrollList) {
