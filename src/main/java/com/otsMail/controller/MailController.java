@@ -34,4 +34,10 @@ public class MailController {
 		return "email sending initiated!";
 	}
 
+	@PostMapping(AppConstants.API + "/enroll")
+	public String Enrollrecipient(@RequestBody RecipientDetail recipientDetail) {
+		emailHelper.registerRecipients(recipientDetail);
+		return "Recipients Registered";
+	}
+
 }
