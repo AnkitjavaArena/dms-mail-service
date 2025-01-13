@@ -1,6 +1,8 @@
 package com.otsMail.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,19 +27,26 @@ public class MailController {
 	private final @NonNull EmailHelper emailHelper;
 
 	@PostMapping(AppConstants.API + "/sendMail")
-	public String sendEmail(@RequestBody RecipientDetail recipientDetail) {
+	public ResponseEntity<?> sendEmail(@RequestBody RecipientDetail recipientDetail) {
 		emailHelper.registerRecipients(recipientDetail);
 
 		for (Recipient recipient : emailHelper.filterUniqueReceipient(recipientDetail.getRecipients())) {
 			mailService.sendEmailToRecipient(recipient);
 		}
-		return "email sending initiated!";
+		return ResponseEntity.ok("email sending initiated!");
 	}
 
 	@PostMapping(AppConstants.API + "/enroll")
-	public String Enrollrecipient(@RequestBody RecipientDetail recipientDetail) {
+	public ResponseEntity<?> Enrollrecipient(@RequestBody RecipientDetail recipientDetail) {
 		emailHelper.registerRecipients(recipientDetail);
-		return "Recipients Registered";
+		return ResponseEntity.ok("Recipients Registered");
+	}
+
+	@GetMapping(AppConstants.API + "/mailSubscribedRecipient")
+	public ResponseEntity<?> Enrollrecipient1() {
+		mailService.sendEmailsToAllActiveandSubscribedRecipients();
+		return ResponseEntity.ok("Mail Sent to all active and subscribed Recipients.");
+
 	}
 
 }
