@@ -1,5 +1,7 @@
 package com.otsMail.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,10 +45,22 @@ public class MailController {
 	}
 
 	@GetMapping(AppConstants.API + "/mailSubscribedRecipient")
-	public ResponseEntity<?> Enrollrecipient1() {
+	public ResponseEntity<?> mailtoAllsubscribedRecipients() {
 		mailService.sendEmailsToAllActiveandSubscribedRecipients();
 		return ResponseEntity.ok("Mail Sent to all active and subscribed Recipients.");
 
+	}
+
+	// status
+	// active- means email working
+	// inactive means emailId removed permanently
+	// subscribe true- means send message
+	// subscribe false- means stop sending note but can be modified later because
+	// they may be hiring.
+
+	@PostMapping(AppConstants.API + "/setInActive")
+	public ResponseEntity<?> modifystatusToInactive(@RequestBody List<String> emailIds) {
+		return ResponseEntity.ok(mailService.setStatusToInactive(emailIds));
 	}
 
 }
