@@ -45,5 +45,5 @@ public class EmailSchedulerService {
 			log.info("Schedular set to false");
 		}
 	}
-
+	
 }

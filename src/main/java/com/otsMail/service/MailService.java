@@ -2,7 +2,9 @@ package com.otsMail.service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -78,5 +80,19 @@ public class MailService {
 			log.info("Fail to send mail to :{}", recipient.getEmail());
 		}
 
+	}
+	
+	public void sendEmailsToAllActiveandSubscribedRecipients() {
+		List<Recipient> recipients = emailHelper.getActiveEnrollments()
+								.stream()
+								.map(enroll -> Recipient.builder()
+											.email(enroll.getTo())
+											.salutation(enroll.getSalutation())
+											.build())
+								.collect(Collectors.toList());
+		for (Recipient recipient : recipients) {
+			sendEmailToRecipient(recipient);
+		}
+	
 	}
 }
