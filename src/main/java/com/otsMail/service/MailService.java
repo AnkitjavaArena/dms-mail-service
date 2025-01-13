@@ -14,6 +14,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.otsMail.config.EmailConfig;
+import com.otsMail.dao.EnrollRepository;
+import com.otsMail.model.Enroll;
 import com.otsMail.model.Recipient;
 import com.otsMail.util.EmailHelper;
 
@@ -31,6 +33,7 @@ public class MailService {
 	private final @NonNull EmailConfig mailConfig;
 	private final @NonNull EmailHelper emailHelper;
 	private final @NonNull EmailHistoryService emailHistoryService;
+	private final @NonNull EnrollRepository enrollRepository;
 
 	private JavaMailSender getMailSender() {
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
@@ -95,4 +98,12 @@ public class MailService {
 		}
 	
 	}
+
+	public List<Enroll> setStatusToInactive(List<String> emailIds) {
+		List<Enroll> enrollList = emailHelper.getEnrollments(emailIds);
+		enrollList.stream().forEach(enroll -> enroll.setStatus("inactive"));
+		return enrollRepository.saveAll(enrollList);
+
+	}
+
 }

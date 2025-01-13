@@ -129,6 +129,11 @@ public class EmailHelper {
 	}
 	
 	public List<Enroll> getActiveEnrollments() {
-        return enrollRepository.findByStatusIgnoreCaseAndSubscribeTrue("active");
-    }
+		return enrollRepository.findByStatusIgnoreCaseAndSubscribeTrue("active");
+	}
+
+	public List<Enroll> getEnrollments(List<String> emails) {
+		return enrollRepository.findByToIn(emails);
+	}
+
 }
