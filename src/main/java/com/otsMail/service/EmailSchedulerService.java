@@ -27,23 +27,23 @@ public class EmailSchedulerService {
 	/**
 	 * Sends Email to recipient with status as active and  subscription as true every Monday at 10AM.
 	 */
-	@Scheduled(cron = "0 0 10 * * MON")
-	public void sendEmailsEveryMondayAt10AM() {
-	       if(isScheduledEnabled) {
-			log.info("Sending emails every Monday at 10 Am to all recipient with status as active and subscription as true: {} ", LocalDateTime.now());
-			List<Recipient> recipients = emailHelper.getActiveEnrollments()
-									.stream()
-									.map(enroll -> Recipient.builder()
-												.email(enroll.getTo())
-												.salutation(enroll.getSalutation())
-												.build())
-									.collect(Collectors.toList());
-			for (Recipient recipient : recipients) {
-				mailService.sendEmailToRecipient(recipient);
-			}
-		}else {
-			log.info("Schedular set to false");
-		}
-	}
-	
+//	@Scheduled(cron = "0 0 10 * * MON")
+//	public void sendEmailsEveryMondayAt10AM() {
+//	       if(isScheduledEnabled) {
+//			log.info("Sending emails every Monday at 10 Am to all recipient with status as active and subscription as true: {} ", LocalDateTime.now());
+//			List<Recipient> recipients = emailHelper.getActiveEnrollments()
+//									.stream()
+//									.map(enroll -> Recipient.builder()
+//												.email(enroll.getTo())
+//												.salutation(enroll.getSalutation())
+//												.build())
+//									.collect(Collectors.toList());
+//			for (Recipient recipient : recipients) {
+//				mailService.sendEmailToRecipient(recipient);
+//			}
+//		}else {
+//			log.info("Schedular set to false");
+//		}
+//	}
+//
 }
