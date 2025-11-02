@@ -10,6 +10,9 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 
 import com.lowagie.text.DocumentException;
+//import com.lowagie.text.Row;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -159,5 +162,84 @@ public class MailService {
 
         return baos.toByteArray();
     }
+
+    public byte[] generateEnrollExcel() throws Exception {
+        List<Enroll> enrollList = enrollRepository.findAll();
+
+        try (Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet("Email Report");
+
+            // ===== Header Style =====
+            CellStyle headerStyle = workbook.createCellStyle();
+            Font headerFont = workbook.createFont();
+            headerFont.setBold(true);
+            headerFont.setColor(IndexedColors.WHITE.getIndex());
+            headerStyle.setFont(headerFont);
+            headerStyle.setFillForegroundColor(IndexedColors.BLUE.getIndex());
+            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            headerStyle.setAlignment(HorizontalAlignment.CENTER);
+            headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+            // ===== Body Style (Centered) =====
+            CellStyle bodyStyle = workbook.createCellStyle();
+            bodyStyle.setAlignment(HorizontalAlignment.CENTER);
+            bodyStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+            // ===== Create Header Row =====
+            String[] headers = {"ID", "Recipient", "Salutation", "Status", "Count", "Subscribed"};
+            Row headerRow = sheet.createRow(0);
+            headerRow.setHeightInPoints(25); // makes header taller for aesthetics
+
+            for (int i = 0; i < headers.length; i++) {
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(headers[i]);
+                cell.setCellStyle(headerStyle);
+            }
+
+            // ===== Body Rows =====
+            int rowIdx = 1;
+            for (Enroll e : enrollList) {
+                Row row = sheet.createRow(rowIdx++);
+                row.setHeightInPoints(20);
+
+                Cell c0 = row.createCell(0);
+                c0.setCellValue(e.getId() != null ? e.getId() : 0);
+                c0.setCellStyle(bodyStyle);
+
+                Cell c1 = row.createCell(1);
+                c1.setCellValue(e.getTo() != null ? e.getTo() : "");
+                c1.setCellStyle(bodyStyle);
+
+                Cell c2 = row.createCell(2);
+                c2.setCellValue(e.getSalutation() != null ? e.getSalutation() : "");
+                c2.setCellStyle(bodyStyle);
+
+                Cell c3 = row.createCell(3);
+                c3.setCellValue(e.getStatus() != null ? e.getStatus() : "");
+                c3.setCellStyle(bodyStyle);
+
+                Cell c4 = row.createCell(4);
+                c4.setCellValue(e.getCount() != null ? e.getCount() : 0);
+                c4.setCellStyle(bodyStyle);
+
+                Cell c5 = row.createCell(5);
+                c5.setCellValue(Boolean.TRUE.equals(e.getSubscribe()) ? "Yes" : "No");
+                c5.setCellStyle(bodyStyle);
+            }
+
+            // ===== Auto-size Columns with Padding =====
+            for (int i = 0; i < headers.length; i++) {
+                sheet.autoSizeColumn(i);
+                int currentWidth = sheet.getColumnWidth(i);
+                sheet.setColumnWidth(i, currentWidth + 1000); // add extra width for padding
+            }
+
+            // ===== Write to Byte Array =====
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            workbook.write(out);
+            return out.toByteArray();
+        }
+    }
+
 
 }

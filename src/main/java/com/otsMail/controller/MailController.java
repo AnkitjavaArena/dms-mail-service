@@ -69,7 +69,7 @@ public class MailController {
      * To Download email data as PDF
      * @return
      */
-    @GetMapping(AppConstants.API + "/enroll/pdf")
+    @GetMapping(AppConstants.API + "/enroll/generatePdf")
     public ResponseEntity<byte[]> generatePdf() {
         try {
             byte[] pdfBytes = mailService.generateEnrollPdf();
@@ -78,6 +78,22 @@ public class MailController {
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=email-report.pdf")
                     .contentType(MediaType.APPLICATION_PDF)
                     .body(pdfBytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping(AppConstants.API + "/generateExcel")
+    public ResponseEntity<byte[]> downloadExcel() {
+        try {
+            byte[] excelData = mailService.generateEnrollExcel();
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=email-report.xlsx")
+                    .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                    .body(excelData);
+
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();

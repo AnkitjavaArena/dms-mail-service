@@ -85,12 +85,20 @@
         <dependency>
             <groupId>org.xhtmlrenderer</groupId>
             <artifactId>flying-saucer-pdf</artifactId>
+            <version>9.1.22</version>
         </dependency>
 
         <dependency>
             <groupId>com.lowagie</groupId>
             <artifactId>itext</artifactId>
+            <version>2.1.7</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.3.0</version>
+        </dependency>
+
 
 
     </dependencies>
