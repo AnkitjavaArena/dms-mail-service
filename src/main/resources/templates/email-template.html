@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Java Developer Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .email-container {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 700px;
+            margin: auto;
+        }
+
+        .signature {
+            margin-top: 25px;
+        }
+
+        .contact {
+            font-size: 0.95em;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+<div class="email-container">
+    <p>Hi <span th:text="${recipientName}">Team</span>,</p>
+
+    <p>
+        I'm writing to express my interest in the <strong th:text="${role}">Java Developer</strong> position. Over the
+        past
+        <span th:text="${experience}">3 years</span> , I've worked on multiple products involving <strong>Java</strong>,
+        <strong>Spring Boot</strong>, and
+        <strong>microservice-based architectures</strong>, gaining hands-on experience in designing and developing
+        scalable and complex backend systems.
+    </p>
+
+    <p>
+        My exposure to diverse projects has strengthened my ability to understand business requirements,
+        design efficient solutions, and collaborate effectively across teams. I'm particularly interested in
+        <strong>Product Strategic Engineering</strong> and would welcome the opportunity to discuss how my background
+        aligns with your team's goals.
+    </p>
+
+    <p>
+        Please find my resume attached for your review. Thank you for your time and consideration.
+    </p>
+
+    <div class="signature">
+        <p>Best regards,<br/>
+            <strong>Ankit Tripathi</strong><br/>
+            <span class="contact">📧 <a href="mailto:ankit.scrps@gmail.com">ankit.scrps@gmail.com</a><br/>
+            📞 +91-6232729560</span>
+        </p>
+    </div>
+</div>
+</body>
+</html>
