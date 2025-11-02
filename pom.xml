@@ -81,6 +81,17 @@
 <!--            <version>4.0.0-RC1</version>-->
         </dependency>
 
+        <!-- PDF Generator (Flying Saucer + iText) -->
+        <dependency>
+            <groupId>org.xhtmlrenderer</groupId>
+            <artifactId>flying-saucer-pdf</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.lowagie</groupId>
+            <artifactId>itext</artifactId>
+        </dependency>
+
 
     </dependencies>
 

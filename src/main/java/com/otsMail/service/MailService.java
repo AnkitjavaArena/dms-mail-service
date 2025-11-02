@@ -1,5 +1,6 @@
 package com.otsMail.service;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
+import com.lowagie.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -29,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
 @Service
 @Log4j2
@@ -132,6 +135,29 @@ public class MailService {
 
         // template name corresponds to /templates/email-template.html
         return templateEngine.process("email-template", context);
+    }
+
+
+    public byte[] generateEnrollPdf() throws DocumentException {
+        List<Enroll> enrollList = enrollRepository.findAll();
+
+        // Inject data into Thymeleaf context
+        Context context = new Context();
+        context.setVariable("enrollList", enrollList);
+        context.setVariable("generatedOn", LocalDateTime.now());
+
+
+        // Process the Thymeleaf template into HTML
+        String htmlContent = templateEngine.process("email-pdf-template", context);
+
+        // Convert HTML to PDF
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ITextRenderer renderer = new ITextRenderer();
+        renderer.setDocumentFromString(htmlContent);
+        renderer.layout();
+        renderer.createPDF(baos);
+
+        return baos.toByteArray();
     }
 
 }

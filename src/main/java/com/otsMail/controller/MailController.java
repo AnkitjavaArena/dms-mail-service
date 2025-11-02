@@ -3,6 +3,8 @@ package com.otsMail.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -62,5 +64,24 @@ public class MailController {
 	public ResponseEntity<?> modifystatusToInactive(@RequestBody List<String> emailIds) {
 		return ResponseEntity.ok(mailService.setStatusToInactive(emailIds));
 	}
+
+    /**
+     * To Download email data as PDF
+     * @return
+     */
+    @GetMapping("/enroll/pdf")
+    public ResponseEntity<byte[]> generatePdf() {
+        try {
+            byte[] pdfBytes = mailService.generateEnrollPdf();
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=email-report.pdf")
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(pdfBytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 
 }
