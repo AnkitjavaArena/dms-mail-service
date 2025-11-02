@@ -2,6 +2,7 @@ package com.otsMail.service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -32,6 +33,7 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.xhtmlrenderer.pdf.ITextRenderer;
@@ -240,6 +242,51 @@ public class MailService {
             return out.toByteArray();
         }
     }
+
+    public void bulkUpdateEnrollData(MultipartFile file) throws Exception {
+        try (InputStream inputStream = file.getInputStream();
+             Workbook workbook = new XSSFWorkbook(inputStream)) {
+
+            Sheet sheet = workbook.getSheetAt(0); // first sheet (Email Report)
+            int rows = sheet.getPhysicalNumberOfRows();
+
+            // Skip header row (start from i = 1)
+            for (int i = 1; i < rows; i++) {
+                Row row = sheet.getRow(i);
+                if (row == null) continue;
+
+                Long id = (long) row.getCell(0).getNumericCellValue();
+
+                // Fetch existing record from DB
+                Enroll enroll = enrollRepository.findById(id).orElse(null);
+                if (enroll == null) continue; // skip if not found
+
+                // Read updated values from Excel
+                String to = getStringCellValue(row.getCell(1));
+                String salutation = getStringCellValue(row.getCell(2));
+                String status = getStringCellValue(row.getCell(3));
+                Integer count = (int) row.getCell(4).getNumericCellValue();
+                String subscribed = getStringCellValue(row.getCell(5));
+
+                // Update fields
+                enroll.setTo(to);
+                enroll.setSalutation(salutation);
+                enroll.setStatus(status);
+                enroll.setCount(count);
+                enroll.setSubscribe("Yes".equalsIgnoreCase(subscribed));
+
+                enrollRepository.save(enroll);
+            }
+        }
+    }
+
+    // Helper method for safe string extraction
+    private String getStringCellValue(Cell cell) {
+        if (cell == null) return "";
+        cell.setCellType(CellType.STRING);
+        return cell.getStringCellValue().trim();
+    }
+
 
 
 }
