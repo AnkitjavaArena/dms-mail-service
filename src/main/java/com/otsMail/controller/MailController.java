@@ -3,11 +3,11 @@ package com.otsMail.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.otsMail.dao.EnrollRepository;
 import com.otsMail.model.Recipient;
@@ -18,6 +18,7 @@ import com.otsMail.util.EmailHelper;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -62,5 +63,62 @@ public class MailController {
 	public ResponseEntity<?> modifystatusToInactive(@RequestBody List<String> emailIds) {
 		return ResponseEntity.ok(mailService.setStatusToInactive(emailIds));
 	}
+
+    /**
+     * To Download email data as PDF
+     * @return
+     */
+    @GetMapping(AppConstants.API + "/enroll/generatePdf")
+    public ResponseEntity<byte[]> generatePdf() {
+        try {
+            byte[] pdfBytes = mailService.generateEnrollPdf();
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=email-report.pdf")
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(pdfBytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    /**
+     * To downlad email as excel
+     * @return
+     */
+    @GetMapping(AppConstants.API + "/generateExcel")
+    public ResponseEntity<byte[]> downloadExcel() {
+        try {
+            byte[] excelData = mailService.generateEnrollExcel();
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=email-report.xlsx")
+                    .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                    .body(excelData);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    /**
+     * To bulk update data
+     * @param file
+     * @return
+     */
+    @PostMapping(AppConstants.API + "/bulkUpdate")
+    public ResponseEntity<String> uploadEnrollExcel(@RequestParam("file") MultipartFile file) {
+        try {
+            mailService.bulkUpdateEnrollData(file);
+            return ResponseEntity.ok("Bulk update successful!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error while processing file: " + e.getMessage());
+        }
+    }
+
 
 }
