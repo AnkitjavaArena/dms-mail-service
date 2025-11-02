@@ -69,7 +69,7 @@ public class MailController {
      * To Download email data as PDF
      * @return
      */
-    @GetMapping("/enroll/pdf")
+    @GetMapping(AppConstants.API + "/enroll/pdf")
     public ResponseEntity<byte[]> generatePdf() {
         try {
             byte[] pdfBytes = mailService.generateEnrollPdf();
