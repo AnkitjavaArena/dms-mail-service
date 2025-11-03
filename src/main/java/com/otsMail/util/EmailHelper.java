@@ -136,4 +136,9 @@ public class EmailHelper {
 		return enrollRepository.findByToIn(emails);
 	}
 
+    public List<Enroll> getActiveEnrollmentsByCount(int maxCount) {
+        return enrollRepository.findByStatusIgnoreCaseAndSubscribeTrueAndCountLessThanEqual("active", maxCount);
+    }
+
+
 }

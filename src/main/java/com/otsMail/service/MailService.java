@@ -250,25 +250,54 @@ public class MailService {
             Sheet sheet = workbook.getSheetAt(0); // first sheet (Email Report)
             int rows = sheet.getPhysicalNumberOfRows();
 
+            int updatedCount = 0;
+            int insertedCount = 0;
+
             // Skip header row (start from i = 1)
             for (int i = 1; i < rows; i++) {
                 Row row = sheet.getRow(i);
                 if (row == null) continue;
 
-                Long id = (long) row.getCell(0).getNumericCellValue();
-
-                // Fetch existing record from DB
-                Enroll enroll = enrollRepository.findById(id).orElse(null);
-                if (enroll == null) continue; // skip if not found
+                Long id = null;
+                if (row.getCell(0) != null && row.getCell(0).getCellType() == CellType.NUMERIC) {
+                    id = (long) row.getCell(0).getNumericCellValue();
+                }
 
                 // Read updated values from Excel
                 String to = getStringCellValue(row.getCell(1));
                 String salutation = getStringCellValue(row.getCell(2));
                 String status = getStringCellValue(row.getCell(3));
-                Integer count = (int) row.getCell(4).getNumericCellValue();
+
+                Integer count = 0;
+                if (row.getCell(4) != null) {
+                    if (row.getCell(4).getCellType() == CellType.NUMERIC) {
+                        count = (int) row.getCell(4).getNumericCellValue();
+                    } else {
+                        try {
+                            count = Integer.parseInt(getStringCellValue(row.getCell(4)));
+                        } catch (NumberFormatException ignored) {
+                        }
+                    }
+                }
+
                 String subscribed = getStringCellValue(row.getCell(5));
 
-                // Update fields
+                // Determine whether to update or insert
+                Enroll enroll = null;
+                if (id != null && id > 0) {
+                    enroll = enrollRepository.findById(id).orElse(null);
+                }
+
+                if (enroll == null) {
+                    // Create new record if not found
+                    enroll = new Enroll();
+                    enroll.setTime(LocalDateTime.now());
+                    insertedCount++;
+                } else {
+                    updatedCount++;
+                }
+
+                // Set common fields
                 enroll.setTo(to);
                 enroll.setSalutation(salutation);
                 enroll.setStatus(status);
@@ -277,6 +306,7 @@ public class MailService {
 
                 enrollRepository.save(enroll);
             }
+            log.info(" Bulk update completed: Updated = {}, Inserted = {}", updatedCount, insertedCount);
         }
     }
 
@@ -285,6 +315,23 @@ public class MailService {
         if (cell == null) return "";
         cell.setCellType(CellType.STRING);
         return cell.getStringCellValue().trim();
+    }
+
+    public void sendEmailsToActiveAndSubscribedRecipientsByCount(int maxCount) {
+        List<Enroll> enrolls = emailHelper.getActiveEnrollmentsByCount(maxCount);
+
+        List<Recipient> recipients = enrolls.stream()
+                .map(enroll -> Recipient.builder()
+                        .email(enroll.getTo())
+                        .salutation(enroll.getSalutation())
+                        .build())
+                .collect(Collectors.toList());
+
+        for (Recipient recipient : recipients) {
+            sendEmailToRecipient(recipient);
+        }
+
+        log.info("Mails sent to {} active & subscribed recipients with count ≤ {}", recipients.size(), maxCount);
     }
 
 

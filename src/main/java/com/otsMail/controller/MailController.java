@@ -2,6 +2,7 @@ package com.otsMail.controller;
 
 import java.util.List;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
+@Log4j2
 public class MailController {
 
 	@Autowired
@@ -32,7 +34,6 @@ public class MailController {
 	@PostMapping(AppConstants.API + "/sendMail")
 	public ResponseEntity<?> sendEmail(@RequestBody RecipientDetail recipientDetail) {
 		emailHelper.registerRecipients(recipientDetail);
-
 		for (Recipient recipient : emailHelper.filterUniqueReceipient(recipientDetail.getRecipients())) {
 			mailService.sendEmailToRecipient(recipient);
 		}
@@ -119,6 +120,18 @@ public class MailController {
                     .body("Error while processing file: " + e.getMessage());
         }
     }
+
+    /**
+     * send mail based on count or if less than count
+     * @param count
+     * @return
+     */
+    @GetMapping(AppConstants.API + "/mailSubscribedRecipient/{count}")
+    public ResponseEntity<?> mailToSubscribedRecipientsByCount(@PathVariable int count) {
+        mailService.sendEmailsToActiveAndSubscribedRecipientsByCount(count);
+        return ResponseEntity.ok("Mail sent to all active and subscribed recipients with count ≤ " + count);
+    }
+
 
 
 }
