@@ -18,5 +18,6 @@ public class EmailConfig {
 	private String subject;
 	private String attachmentname;
     private Boolean useHtmlTemplate = false;
+    private String jobexperience;
 
 }

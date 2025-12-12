@@ -133,7 +133,7 @@ public class MailService {
         context.setVariable("email", recipient.getEmail());
         context.setVariable("date", LocalDate.now().format(DateTimeFormatter.ofPattern("MMMM dd, yyyy")));
         context.setVariable("role", "Java Developer");
-        context.setVariable("experience", "3+ years");
+        context.setVariable("experience", mailConfig.getJobexperience());
         context.setVariable("githubLink", "https://github.com/AnkitjavaArena/dms-mail-service");
         context.setVariable("portfolioLink", "https://ankitjavaarena.github.io/Ankit-portfolio/");
 
