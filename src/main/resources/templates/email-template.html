@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Java Developer Application</title>
+    <title>Java Backend Developer Application</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -41,60 +41,75 @@
 </head>
 <body>
 <div class="email-container">
+
     <p>Hi <span th:text="${recipientName}">Team</span>,</p>
 
     <p>
-        I'm writing to express my interest in the <strong th:text="${role}">Java Developer</strong> position. Over the
-        past
-        <span th:text="${experience}">3 years</span>, I've worked on multiple products involving <strong>Java</strong>,
-        <strong>Spring Boot</strong>, and
-        <strong>monolithic & microservice-based architectures</strong>, gaining hands-on experience in designing and developing
-        scalable and complex backend systems.
+        I’m writing to express my interest in the
+        <strong th:text="${role}">Java Backend Developer</strong> position.
     </p>
 
     <p>
-        My exposure to diverse projects has strengthened my ability to understand business requirements,
-        design efficient solutions, and collaborate effectively across teams. I'm particularly interested in
-        <strong>Product Strategic Engineering</strong> and would welcome the opportunity to discuss how my background
-        aligns with your team's goals.
+        I have <strong th:text="${experience}">3.6+ years</strong> of experience working on multiple products using
+        <strong>Java, Spring Boot</strong>, and
+        <strong>monolithic & microservice-based architectures</strong>,
+        with hands-on experience in building <strong>scalable and complex backend systems</strong>.
     </p>
 
     <p>
-        Although I have <strong>3.6 years</strong> of total experience, I have consistently been entrusted with responsibilities typically handled by professionals with <span class="highlight">around 6 years of experience.</span>
-        In my current role, I’ve owned key product modules end-to-end, led technical discussions, designed solutions, and worked directly with senior stakeholders—taking responsibility for design decisions, quality, and delivery.
+        Across my roles, I’ve consistently handled responsibilities typically expected at a
+        <span class="highlight">higher-responsibility roles</span>, including:
+    </p>
+
+    <ul>
+        <li>Owning end-to-end backend modules</li>
+        <li>Designing solutions and implementing complex business logic</li>
+        <li>Leading technical discussions and working with senior stakeholders</li>
+        <li>Ensuring system scalability, quality, and maintainability</li>
+        <li>Contributing to code reviews, architecture discussions, and backend hiring interviews</li>
+        <li>Mentoring engineers and collaborating cross-functionally with product teams</li>
+    </ul>
+
+    <p>
+        I’m particularly interested in <strong>Product / Strategic Engineering</strong>, where strong ownership and
+        technical depth are critical, and I believe my background aligns well with such teams.
     </p>
 
     <p>
-        Along with core development, I’ve mentored engineers, collaborated across teams, and contributed to code reviews and architectural discussions. I’ve also supported backend hiring by conducting technical interviews and providing structured feedback.
+        <span class="highlight">
+            Availability: Immediate joiner
+        </span>
     </p>
 
     <p>
-        I’ve led end-to-end backend development, implemented complex business logic, and ensured scalability and maintainability across Java and Spring Boot microservices, strengthening my problem-solving abilities, technical leadership exposure, and product-focused mindset.
-    </p>
-
-    <p>
-        <span class="highlight">I would like to highlight that I will be available to join immediately after January 15th.</span>
-    </p>
-
-    <p>
-        Please find my resume attached for your review. Thank you for your time and consideration.
+        Please find my resume attached for your review. I would welcome the opportunity to discuss how my background
+        can add value to your team.
     </p>
 
     <div class="signature">
-        <p>Best regards,<br/>
+        <p>
+            Best regards,<br/>
             <strong>Ankit Tripathi</strong><br/>
-            <span class="contact">📧 <a href="mailto:ankit.scrps@gmail.com">ankit.scrps@gmail.com</a><br/>
-            📞 +91-6232729560</span>
+            <span class="contact">
+                📧 <a href="mailto:ankit.scrps@gmail.com">ankit.scrps@gmail.com</a><br/>
+                📞 +91-6232729560
+            </span>
         </p>
     </div>
 
-    <div class="footer" style="margin-top: 30px; font-size: 0.85em; color: #888; border-top: 1px solid #ddd; padding-top: 10px;">
+    <div class="footer"
+         style="margin-top: 30px; font-size: 0.85em; color: #888; border-top: 1px solid #ddd; padding-top: 10px;">
         <p>
-            This email was automatically generated by my personal application and is monitored.<br/>
-            You can view the project on GitHub:
-            <a th:href="${githubLink}" target="_blank" style="color: #1a73e8;" th:text="${githubLink}">GitHub Link</a><br/>
-            Portfolio Link:
-            <a th:href="${portfolioLink}" target="_blank" style="color: #1a73e8;" th:text="${portfolioLink}">Portfolio</a>
+            GitHub:
+            <a th:href="${githubLink}" target="_blank" style="color: #1a73e8;"
+               th:text="${githubLink}">GitHub Link</a><br/>
+            Portfolio:
+            <a th:href="${portfolioLink}" target="_blank" style="color: #1a73e8;"
+               th:text="${portfolioLink}">Portfolio</a><br/>
+            Linkedin:
+            <a th:href="${linkedinLink}" target="_blank" style="color: #1a73e8;"
+               th:text="${linkedinLink}">Portfolio</a>
+
         </p>
     </div>
 

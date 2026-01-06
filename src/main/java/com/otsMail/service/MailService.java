@@ -136,6 +136,7 @@ public class MailService {
         context.setVariable("experience", mailConfig.getJobexperience());
         context.setVariable("githubLink", "https://github.com/AnkitjavaArena/dms-mail-service");
         context.setVariable("portfolioLink", "https://ankitjavaarena.github.io/Ankit-portfolio/");
+        context.setVariable("linkedinLink", "https://www.linkedin.com/in/ankit-tripathi-272690206");
 
 
         // template name corresponds to /templates/email-template.html
