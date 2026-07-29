@@ -46,6 +46,11 @@ public class MailController {
 		return ResponseEntity.ok("Recipients Registered");
 	}
 
+	@GetMapping(AppConstants.API + "/enrollments")
+	public ResponseEntity<?> getAllEnrollments() {
+		return ResponseEntity.ok(enrollRepository.findAll());
+	}
+
 	@GetMapping(AppConstants.API + "/mailSubscribedRecipient")
 	public ResponseEntity<?> mailtoAllsubscribedRecipients() {
 		mailService.sendEmailsToAllActiveandSubscribedRecipients();
